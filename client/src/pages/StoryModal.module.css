@@ -1,0 +1,108 @@
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+  }
+  
+  /* Modal styles */
+  .modal {
+    background: white;
+    width: 40%;
+    height: 400px;
+    color: black;
+    padding: 20px;
+    border-radius: 20px;
+    text-align: center;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    z-index: 1001;
+  }
+  
+  .button {
+    background: #73ABFF;
+    padding: 8px 30px;
+    border-radius: 30px;
+    border: none;
+ 
+    color: black;
+    font-size: 1rem;
+    cursor: pointer;
+  }
+
+
+
+
+  
+  .header {
+    margin-bottom: 10px;
+  }
+  
+  .media img,
+  .media video {
+    width: 100%;
+    max-height: 300px;
+    object-fit: contain;
+  }
+  
+  .controls {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    transform: translateY(-50%);
+  }
+  
+  .arrow {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 5rem;
+    cursor: pointer;
+    padding: 0 20px;
+  }
+  
+  .arrow.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  
+  /* Top Buttons (Cross and Share) */
+.topButtons {
+  position: absolute;
+  top: 150px;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.closeButton, .shareButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+/* Bottom Buttons (Like, Bookmark, Download) */
+.bottomButtons {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 10px;
+}
+
+.likeButton, .bookmarkButton, .downloadButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+}

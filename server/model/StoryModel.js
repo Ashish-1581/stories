@@ -17,7 +17,13 @@ const slideSchema=new mongoose.Schema({
     },
     mediaType:{
         type:String,
-        required:true,}
+        required:true,},
+
+        likes:{
+            type:Number,
+            required:true,
+            default:0,
+        },
  
     })
     const storySchema=new mongoose.Schema({
@@ -28,7 +34,7 @@ const slideSchema=new mongoose.Schema({
         },
         userId:{
             type:mongoose.Schema.Types.ObjectId,
-            ref:'User',
+            ref:User,
             required:true,
         }
       

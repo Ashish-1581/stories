@@ -5,6 +5,7 @@ const cors=require('cors');
 const app=express();
 const userRoute=require("./Routes/userRoute")
 const storyRoute=require("./Routes/storyRoute")
+const slideRoute=require("./Routes/slideRoute")
 
 env.config();
 app.use(cors());
@@ -12,6 +13,7 @@ app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 app.use("/auth",userRoute);
 app.use("/story",storyRoute);
+app.use("/slide",slideRoute);
 
 const PORT=process.env.PORT
 const MONGO_URL=process.env.MONGO_URL

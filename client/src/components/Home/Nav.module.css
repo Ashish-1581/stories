@@ -4,6 +4,7 @@
     border-bottom: 1px solid rgba(0,0,0,.1);
     box-shadow: 0 10px 40px rgba(0,0,0,.1);
     padding: 10px;
+    align-items: center;
    
     
 }
@@ -17,3 +18,39 @@
     color: white;
    
 }
+
+
+.hamburger {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+  }
+  
+  .menu {
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    border: 1px solid #ccc;
+    padding: 20px;
+    position: absolute;
+    top: 50px; /* Adjust based on your layout */
+    right: 10px; /* Adjust based on your layout */
+    z-index: 100;
+  }
+  
+  .menu p {
+    margin: 10px 0;
+    font-weight: bold;
+  }
+  
+  .menu button {
+    margin-top: 10px;
+    background-color: #ff7373;
+    border: none;
+    color: white;
+    padding:  10px;
+    cursor: pointer;
+    border-radius: 20px;
+  }
+  

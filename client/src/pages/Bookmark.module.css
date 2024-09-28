@@ -1,0 +1,100 @@
+.bookmarkPage {
+    padding: 20px;
+    text-align: center;
+}
+
+.bookmarkPage h2 {
+    font-size: 2rem;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+
+.bookmarkContainer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px; 
+    justify-content: flex-start; 
+}
+
+
+.bookmarkCard {
+    width: calc(33.333% - 20px); 
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    transition: transform 0.2s;
+}
+
+
+.bookmarkCard:hover {
+    transform: scale(1.05); 
+}
+
+
+.media {
+    width: 100%;
+    height: 200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f0f0f0;
+}
+
+/* Image and video styles */
+.bookmarkImage,
+.bookmarkVideo {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: cover;
+}
+
+
+.bookmarkContent {
+    padding: 15px;
+}
+
+.bookmarkContent h3 {
+    margin: 0;
+    font-size: 1.25rem;
+    color: #333;
+}
+
+.bookmarkContent p {
+    margin: 10px 0 0;
+    font-size: 0.9rem;
+    color: #555;
+}
+
+
+@media (max-width: 1024px) {
+    .bookmarkCard {
+        width: calc(50% - 20px); /* 2 cards per row on medium screens */
+    }
+}
+
+@media (max-width: 768px) {
+    .bookmarkCard {
+        width: calc(100% - 20px); /* 1 card per row on small screens */
+    }
+
+    .bookmarkPage h2 {
+        font-size: 1.75rem; /* Slightly smaller heading */
+    }
+}
+
+@media (max-width: 480px) {
+    .bookmarkPage h2 {
+        font-size: 1.5rem; /* Smaller heading on mobile */
+    }
+
+    .bookmarkContent h3 {
+        font-size: 1rem;
+    }
+
+    .bookmarkContent p {
+        font-size: 0.8rem;
+    }
+}

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
-import styles from "./AddStoryModal.module.css";
+import styles from "../../Styles/addStoryModal.module.css";
 import { create_Story } from "../../api/storyApi";
 import axios from "axios";
 

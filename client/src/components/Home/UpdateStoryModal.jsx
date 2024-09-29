@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import styles from "../../Styles/addStoryModal.module.css";
-import { create_Story } from "../../api/storyApi";
 import axios from "axios";
 import { RxCrossCircled } from "react-icons/rx";
 import {get_Story,update_Story} from "../../api/storyApi";

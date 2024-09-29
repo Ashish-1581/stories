@@ -239,6 +239,7 @@ function Home() {
                                 onClick={() => navigate(`/story/${story._id}`)}
                                 className={Styles.media}
                               >
+                             
                                 {story.slides[0].mediaType === "image" ? (
                                   <img
                                     src={story.slides[0].mediaUrl}
@@ -252,6 +253,7 @@ function Home() {
                                 ) : (
                                   <p>Loading media...</p>
                                 )}
+                                
                               </div>
                               <div className={Styles.content}>
                                 <h1>{story.slides[0].heading}</h1>
@@ -295,6 +297,7 @@ function Home() {
                           <div key={story._id} className={Styles.story}>
                             <div
                               onClick={() => navigate(`/story/${story._id}`)}
+                              className={Styles.media}
                             >
                               {story.slides[0].mediaType === "image" ? (
                                 <img

@@ -6,7 +6,7 @@ const { createStory, updateStory, getStoryById,getStories,getUserStories } =requ
 
 router.post('/create',authMiddleware,createStory);
 
-router.patch('/update/:storyId',authMiddleware,updateStory);
+router.patch('/update/:storyId',updateStory);
 
 router.get('/get/:storyId',getStoryById);
 

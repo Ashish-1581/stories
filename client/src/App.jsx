@@ -7,6 +7,7 @@ import StoryModal from './pages/StoryModal';
 import Bookmark from './pages/Bookmark';
 
 
+
 function App() {
 
 
@@ -17,6 +18,7 @@ function App() {
     <Route path="/" element={<Home/>}/>
     <Route path="/story/:storyId" element={<StoryModal/>}/>
     <Route path="/bookmark" element={<Bookmark/>}/>
+ 
     </Routes>
     
     </BrowserRouter>

@@ -3,6 +3,8 @@ import { toast } from "react-toastify";
 import styles from "../../Styles/addStoryModal.module.css";
 import { create_Story } from "../../api/storyApi";
 import axios from "axios";
+import { RxCrossCircled } from "react-icons/rx";
+
 
 const AddStoryModal = ({ setShowAddStory }) => {
   const token = localStorage.getItem("token");
@@ -11,18 +13,12 @@ const AddStoryModal = ({ setShowAddStory }) => {
 
   const [category, setCategory] = useState("");
   const [slides, setSlides] = useState([
-    { heading: "", description: "", mediaUrl: "", mediaType: "" }, // Added mediaType property
+    { heading: "", description: "", mediaUrl: "", mediaType: "" },
     { heading: "", description: "", mediaUrl: "", mediaType: "" },
     { heading: "", description: "", mediaUrl: "", mediaType: "" },
   ]);
 
   const [selectedSlideIndex, setSelectedSlideIndex] = useState(0);
-  const [validationMessages, setValidationMessages] = useState({
-    heading: "",
-    description: "",
-    mediaUrl: "",
-    category: "",
-  });
 
   const handleInputChange = (index, field, value) => {
     const newSlides = [...slides];
@@ -78,18 +74,18 @@ const AddStoryModal = ({ setShowAddStory }) => {
         });
       } else if (contentType.startsWith("image/")) {
         slides[index].mediaType = "image";
+        return Promise.resolve();
       } else {
         throw new Error("Unsupported media type. Only images and videos are allowed.");
       }
     } catch (error) {
-      throw error;
+      throw new Error("Unsupported media type. Only images and videos are allowed.");
     }
   };
 
   const createStory = async () => {
     let allFieldsFilled = true;
 
-    // Check if all fields in slides are filled
     for (const slide of slides) {
       if (!slide.heading.trim() || !slide.description.trim() || !slide.mediaUrl.trim()) {
         allFieldsFilled = false;
@@ -108,22 +104,38 @@ const AddStoryModal = ({ setShowAddStory }) => {
     }
 
     try {
-      // Validate each slide's media URL
       for (const [index, slide] of slides.entries()) {
         if (slide.mediaUrl.trim()) {
-          await validateMedia(slide, index); // Use async/await for media validation
+          await validateMedia(slide, index);
         }
       }
 
-      // Once all validations are successful, create the story
       const response = await create_Story(slides, category, token);
 
       if (response.status === 200) {
         toast.success("Story created successfully!");
-        setShowAddStory(false); // Optionally close modal after success
+        setShowAddStory(false);
       }
     } catch (error) {
-      toast.error(error.message); // Show error message using toast
+      toast.error(error.message);
+    }
+  };
+
+  // Handle Next button click
+  const handleNext = () => {
+    if (selectedSlideIndex < slides.length - 1) {
+      setSelectedSlideIndex(selectedSlideIndex + 1);
+    } else {
+      toast.error("You are on the last slide.");
+    }
+  };
+
+  // Handle Previous button click
+  const handlePrevious = () => {
+    if (selectedSlideIndex > 0) {
+      setSelectedSlideIndex(selectedSlideIndex - 1);
+    } else {
+      toast.error("You are on the first slide.");
     }
   };
 
@@ -132,121 +144,116 @@ const AddStoryModal = ({ setShowAddStory }) => {
   return (
     <>
       <div className={styles.overlay}>
-        <div
-          style={{
-            background: "white",
-            padding: "50px",
-            height: "500px",
-            width: "600px",
-            borderRadius: "10px",
-            position: "relative",
-          }}
-        >
-          <div>
-            <div className="slides-container">
-              <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
-                <div className="slides-list">
-                  {slides.map((slide, index) => (
-                    <div className="slide" key={index}>
-                      <button
-                        onClick={() => handleSlideClick(index)}
-                        className={`slide-button ${
-                          index === selectedSlideIndex ? "selected" : ""
-                        }`}
-                      >
-                        {index + 1}
-                      </button>
-                      {slides.length > 3 && index >= 3 && (
-                        <button
-                          onClick={() => deleteSlide(index)}
-                          style={{ marginLeft: "10px", backgroundColor: "red", color: "white" }}
-                        >
-                          X
-                        </button>
-                      )}
-                    </div>
-                  ))}
-                </div>
-                {slides.length < 6 && (
-                  <button onClick={addNewSlide} className="add-slide-button">
-                    +
+        <div className={styles.modal}>
+        <button onClick={() => setShowAddStory(false)} className={styles.cancelButton}>
+        <RxCrossCircled style={{color:"red",fontSize:"3rem"}} />
+            </button>
+          <div className={styles.slidesContainer}>
+            {slides.map((slide, index) => (
+              <div key={index} className={styles.slideButtonContainer}>
+                <button
+                  onClick={() => handleSlideClick(index)}
+                  className={`${styles.slideButton} ${
+                    index === selectedSlideIndex ? styles.selected : ""
+                  }`}
+                >
+                  Slide {index + 1}
+                </button>
+                {slides.length > 3 && index >= 3 && (
+                  <button
+                    onClick={() => deleteSlide(index)}
+                    className={styles.deleteSlideButton}
+                  >
+                  <RxCrossCircled style={{color:"red",fontSize:"1.2rem"}} />
                   </button>
                 )}
               </div>
-              <div style={{ color: "#9f9f9f", fontSize: "1rem" }}>
-                Min 3 slides | Max 6 slides
-              </div>
-            </div>
-
-            {selectedSlide && (
-              <div>
-                <div>
-                  <input
-                    type="text"
-                    value={selectedSlide.heading}
-                    onChange={(e) =>
-                      handleInputChange(selectedSlideIndex, "heading", e.target.value)
-                    }
-                    placeholder="Heading"
-                    className="heading-input"
-                  />
-                </div>
-
-                <div>
-                  <textarea
-                    value={selectedSlide.description}
-                    onChange={(e) =>
-                      handleInputChange(selectedSlideIndex, "description", e.target.value)
-                    }
-                    placeholder="Description"
-                    className="description-input"
-                  />
-                </div>
-
-                <div>
-                  <input
-                    type="text"
-                    value={selectedSlide.mediaUrl}
-                    onChange={(e) =>
-                      handleInputChange(selectedSlideIndex, "mediaUrl", e.target.value)
-                    }
-                    placeholder="Image/Video URL (15 sec)"
-                    className="mediaUrl-input"
-                  />
-                </div>
-              </div>
+            ))}
+            {slides.length < 6 && (
+              <button onClick={addNewSlide} className={styles.addButton}>
+                Add +
+              </button>
             )}
-
-            {/* Category Selection */}
-            <div className="category">
-              <h3>Category</h3>
-              <select
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
-              >
-                <option value="">Select Category</option>
-                {categories.map((cat, index) => (
-                  <option key={index} value={cat}>
-                    {cat}
-                  </option>
-                ))}
-              </select>
-            </div>
           </div>
 
-          <div className="lower-button">
-            <button
-              className="button"
-              onClick={() => setShowAddStory(false)}
+          {selectedSlide && (
+            <div className={styles.slideForm}>
+              <div className={styles.inputGroup}>
+                <label>Heading :</label>
+                <input
+                  type="text"
+                  value={selectedSlide.heading}
+                  onChange={(e) =>
+                    handleInputChange(selectedSlideIndex, "heading", e.target.value)
+                  }
+                  placeholder="Your heading"
+                />
+              </div>
+              <div className={styles.inputGroup}>
+                <label>Description :</label>
+                <textarea
+                  value={selectedSlide.description}
+                  onChange={(e) =>
+                    handleInputChange(selectedSlideIndex, "description", e.target.value)
+                  }
+                  placeholder="Story Description"
+                  className={styles.textArea}
+                />
+              </div>
+              <div className={styles.inputGroup}>
+                <label>Image/Video :</label>
+                <input
+                  type="text"
+                  value={selectedSlide.mediaUrl}
+                  onChange={(e) =>
+                    handleInputChange(selectedSlideIndex, "mediaUrl", e.target.value)
+                  }
+                  placeholder="Add Image or video URL"
+                />
+              </div>
+            </div>
+          )}
+
+          <div className={styles.inputGroup}>
+            <label>Category :</label>
+            <select
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+              className={styles.categorySelect}
             >
-              Cancel
+              <option value="">Select category</option>
+              {categories.map((cat, index) => (
+                <option key={index} value={cat}>
+                  {cat}
+                </option>
+              ))}
+            </select>
+           
+          </div>
+          <div className={styles.finalButtonGroup}>
+
+          <div className={styles.buttonGroup}>
+            <button
+              onClick={handlePrevious}
+              className={styles.navigationButton}
+              disabled={selectedSlideIndex === 0}
+            >
+              Previous
             </button>
             <button
-              className="button"
-              style={{ color: "white", background: "#60B84B" }}
-              onClick={createStory}
+              onClick={handleNext}
+              className={styles.navigationButton}
+              disabled={selectedSlideIndex === slides.length - 1}
+              style={{background:"#73ABFF"}}
             >
-              Create Story
+              Next
+            </button>
+          </div>
+
+          
+            
+            <button onClick={createStory} className={styles.postButton}>
+              Post
             </button>
           </div>
         </div>

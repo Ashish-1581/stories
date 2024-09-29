@@ -14,13 +14,9 @@ export const create_Story = async (slides, category, token) => {
     }
 }
 
-export const update_Story = async (storyId, slides, category, token) => {
+export const update_Story = async (storyId, slides, category) => {
     try {
-        const response = await axios.patch(`${baseUrl}/story/update/${storyId}`, { slides,category }, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        });
+        const response = await axios.patch(`${baseUrl}/story/update/${storyId}`, { slides,category });
         return response;
     }
     catch (error) {

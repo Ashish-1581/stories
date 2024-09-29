@@ -4,12 +4,15 @@ import { get_Stories } from "../api/storyApi";
 import Styles from "./Home.module.css";
 import { useNavigate } from "react-router-dom";
 import { get_UserStories } from "../api/storyApi";
+import UpdateStoryModal from "../components/Home/UpdateStoryModal";
 
 function Home() {
   const [stories, setStories] = useState([]);
   const [selectedCategories, setSelectedCategories] = useState(["All"]);
   const [visibleStories, setVisibleStories] = useState({});
   const isLogin = localStorage.getItem("isLogin");
+  const [storyId, setStoryId] = useState(null);
+  const[showUpdate,setShowUpdate]=useState(false);
  
 
   const [userStories, setUserStories] = useState([]);
@@ -108,7 +111,7 @@ function Home() {
 
   return (
     <>
-      <Nav  />
+  <Nav  />
    <div>
         {/* Category Filter Buttons */}
         <div className={Styles.categories}>
@@ -146,7 +149,8 @@ function Home() {
                       <p>Loading media...</p>
                     )}
                   </div>
-                  <button onClick={() => navigate(`/update/${story._id}`)}>
+                  <button onClick={() =>{ setStoryId(story._id);
+                    setShowUpdate(true)}}>
                     edit
                   </button>
                 </div>
@@ -262,6 +266,7 @@ function Home() {
               ))}
         </div>
       </div>
+      {showUpdate && <UpdateStoryModal setShowUpdate={setShowUpdate} storyId={storyId} />}
     </>
   );
 }

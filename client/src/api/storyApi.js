@@ -37,9 +37,10 @@ export const get_Story = async (storyId) => {
 
 
 
-export const get_Stories = async () => {
+export const get_Stories = async (cat) => {
     try {
-        const response = await axios.get(`${baseUrl}/story/get`);
+       
+        const response = await axios.get(`${baseUrl}/story/get`,{params:{cat}});
         return response;
     } catch (error) {
         return { error: error.response.data.message };

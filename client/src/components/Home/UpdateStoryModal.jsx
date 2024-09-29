@@ -134,7 +134,10 @@ const UpdateStoryModal = ({ setShowUpdate ,storyId}) => {
 
       if (response.status === 200) {
         toast.success("Story updated successfully!");
+        window.location.reload();
         setShowUpdate(false);
+      
+
       }
     } catch (error) {
       toast.error(error.message);

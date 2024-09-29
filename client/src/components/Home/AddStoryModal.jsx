@@ -114,6 +114,7 @@ const AddStoryModal = ({ setShowAddStory }) => {
 
       if (response.status === 200) {
         toast.success("Story created successfully!");
+        window.location.reload();
         setShowAddStory(false);
       }
     } catch (error) {

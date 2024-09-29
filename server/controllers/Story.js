@@ -44,10 +44,15 @@ const getStoryById=async(req,res)=>{
 }
 
 const getStories=async(req,res)=>{
+const {cat}=req.query;
+ let filter={};
+if(cat&&cat.length>0){
+    const categoryList = cat.split(",");
 
- 
+ filter.category = { $in: categoryList };
+}
     try{
-        const stories=await Story.find();
+        const stories=await Story.find(filter);
         res.status(200).json(stories);
     }
     catch(err){

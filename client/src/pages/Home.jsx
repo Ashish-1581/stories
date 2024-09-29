@@ -26,7 +26,7 @@ function Home() {
   const fetchStories = () => {
     const categoriesToSend = selectedCategories.includes("All")
       ? ""
-      : selectedCategories.join(","); // Send empty string if "All" is selected
+      : selectedCategories.join(","); 
     get_Stories(categoriesToSend).then((response) => {
       if (response.data) {
         setStories(response.data);

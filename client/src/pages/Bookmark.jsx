@@ -48,7 +48,7 @@ function Bookmark() {
                             </div>
                         ))
                     ) : (
-                        <p>No bookmarks available.</p>
+                        <p style={{textAlign:"center",width:"100%"}}>No bookmarks available.</p>
                     )}
                 </div>
             </div>

@@ -64,7 +64,7 @@ function StoryModal() {
         const blobUrl = window.URL.createObjectURL(blob);
         const anchor = document.createElement("a");
         anchor.href = blobUrl;
-        anchor.download = "download from stories";
+        anchor.download = "download from stories_Ashish";
         document.body.appendChild(anchor);
         anchor.click();
         document.body.removeChild(anchor);

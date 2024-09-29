@@ -4,7 +4,7 @@ const baseUrl = import.meta.env.VITE_BACKEND_URL;
 export const createLike = async (storyId, slideId) => {
 
  try {
-    console.log(storyId,storyId)
+    
   
         const response = await axios.post(`${baseUrl}/slide/createLike`, { storyId, slideId });
         return response;

@@ -1,102 +1,194 @@
-.categories{
-    display: flex;
-   
-   
-   
+.categories {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
 }
 
-.category{
-    margin: 10px;
-    padding: 10px;
-    height: 150px; 
-    width: 15%;
-    border: 1px solid rgba(0,0,0,.1);
-    border-radius: 20px;
-    cursor: pointer;
-    text-align: center;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-   
+.category {
+  margin: 10px;
+  padding: 10px;
+  height: 150px; 
+  width: 12%;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 20px;
+  cursor: pointer;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: transform 0.2s;
 }
 
 /* Hover effect for category buttons */
 .category:hover {
-    background-color: #ddd;
-  }
-  
-  /* Active category styling (when selected) */
-  .activeCategory {
-    background-color: #007bff;
-    color: #fff;
-  }
-  
-  /* Heading styles */
-  .heading {
-    text-align: center;
-    font-size: 24px;
-    margin-bottom: 20px;
-  }
-  
-  /* Story container */
-  .story {
-    background-color: #f9f9f9;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    padding: 20px;
-    margin: 20px;
-    transition: box-shadow 0.3s ease;
-  }
-  
-  /* Story hover effect */
-  .story:hover {
-    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
-  }
-  
-  /* Title of the story */
-  .story h1 {
-    font-size: 20px;
-    color: #333;
-    margin-bottom: 10px;
-  }
-  
-  /* Description of the story */
-  .story p {
-    font-size: 16px;
-    color: #555;
-    margin-bottom: 10px;
-  }
-  
-  /* Media (image and video) styles */
-  .story img, .story video {
-    max-width: 100%;
-    height: auto;
-    border-radius: 8px;
-    margin-top: 10px;
-  }
-  
-  /* Container for the Show More button */
-  .showMoreContainer {
-    text-align: center;
-    margin-top: 20px;
-  }
-  
+  background-color: #ddd;
+}
 
-  
-  /* Media queries for responsive behavior */
-  @media (max-width: 768px) {
-    .story {
-      padding: 15px;
-      margin: 15px 10px;
-    }
-  
-    .category {
-      font-size: 14px;
-      padding: 8px 15px;
-    }
-  
-    .heading {
-      font-size: 20px;
-    }
+/* Active category styling */
+.activeCategory {
+  background-color: #007bff;
+  color: #fff;
+}
+
+/* Heading styles */
+.heading {
+  text-align: center;
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.storyContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: flex-start;
+}
+
+/* Keep the current .story properties intact */
+.story {
+  width: calc(33.333% - 130px); /* Original size */
+  position: relative;
+  height: 400px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: black;
+  transition: transform 0.2s;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Hover effect */
+.story:hover {
+  transform: scale(1.05);
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Media styles */
+.story img,
+.story video {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: cover;
+}
+
+/* Story content styles */
+.story h1 {
+  margin: 0;
+  font-size: 1.25rem;
+  color: white;
+}
+
+.story p {
+  margin: 10px 0 0;
+  font-size: 0.9rem;
+  color: white;
+}
+
+/* Show More button */
+.showMoreContainer {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin: 40px;
+}
+
+.showMoreContainer button {
+  background-color: #ff7373;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 20px;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+}
+
+.media {
+  width: 100%;
+  height: 200px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: black;
+}
+
+/* Edit button */
+.editButton {
+  background-color: white;
+  color: black;
+  border: none;
+  padding: 10px 20px;
+  position: absolute;
+  border-radius: 20px;
+  cursor: pointer;
+  margin-right: 10px;
+  bottom: 0;
+  left: 35%;
+  border: 1px solid #ddd;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+}
+
+.content {
+  padding: 15px;
+}
+
+/* Media queries for responsive behavior */
+
+/* Tablets (max-width: 1024px) */
+@media (max-width: 1024px) {
+  .story {
+    width: calc(50% - 40px); /* Show 2 stories per row on tablets */
   }
+
+  .category {
+    width: 22%; /* Adjust category width for tablets */
+  }
+
+  .heading {
+    font-size: 22px;
+  }
+}
+
+/* Mobile devices (max-width: 768px) */
+@media (max-width: 768px) {
+  .story {
+    width: calc(100% - 40px); /* Full-width story for mobile */
+    height: auto; /* Adjust height for mobile */
+  }
+
+  .category {
+    width: 45%; /* Adjust category width for mobile (two per row) */
+    font-size: 14px;
+    padding: 8px 15px;
+  }
+
+  .heading {
+    font-size: 20px;
+  }
+}
+
+/* Small mobile devices (max-width: 576px) */
+@media (max-width: 576px) {
+  .story {
+    width: calc(100% - 30px); /* Full-width story with smaller gap for very small screens */
+  }
+
+  .category {
+    width: 100%; /* Full-width categories for small devices */
+  }
+
+  .heading {
+    font-size: 18px;
+  }
+
+  .showMoreContainer {
+    margin: 20px;
+  }
+
+  .showMoreContainer button {
+    padding: 8px 16px;
+    font-size: 14px;
+  }
+}

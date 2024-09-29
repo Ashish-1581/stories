@@ -1,6 +1,6 @@
 .bookmarkPage {
     padding: 20px;
-    text-align: center;
+    
 }
 
 .bookmarkPage h2 {
@@ -19,13 +19,17 @@
 
 
 .bookmarkCard {
-    width: calc(33.333% - 20px); 
+    width: calc(33.333% - 130px); 
+    height: 400px;
     border: 1px solid #ddd;
     border-radius: 8px;
     overflow: hidden;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    background-color: #fff;
+    background-color:black;
     transition: transform 0.2s;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 
@@ -40,7 +44,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #f0f0f0;
+    background-color:black;
 }
 
 /* Image and video styles */
@@ -54,18 +58,19 @@
 
 .bookmarkContent {
     padding: 15px;
+  
 }
 
 .bookmarkContent h3 {
     margin: 0;
     font-size: 1.25rem;
-    color: #333;
+    color: white;
 }
 
 .bookmarkContent p {
     margin: 10px 0 0;
     font-size: 0.9rem;
-    color: #555;
+    color: white;
 }
 
 

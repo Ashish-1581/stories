@@ -5,6 +5,7 @@ import Styles from "./Home.module.css";
 import { useNavigate } from "react-router-dom";
 import { get_UserStories } from "../api/storyApi";
 import UpdateStoryModal from "../components/Home/UpdateStoryModal";
+import { FaRegEdit } from "react-icons/fa";
 
 function Home() {
   const [stories, setStories] = useState([]);
@@ -12,10 +13,10 @@ function Home() {
   const [visibleStories, setVisibleStories] = useState({});
   const isLogin = localStorage.getItem("isLogin");
   const [storyId, setStoryId] = useState(null);
-  const[showUpdate,setShowUpdate]=useState(false);
- 
+  const [showUpdate, setShowUpdate] = useState(false);
 
   const [userStories, setUserStories] = useState([]);
+  const [visibleUserStories, setVisibleUserStories] = useState(4); // Initial limit for user stories
 
   const navigate = useNavigate();
 
@@ -71,8 +72,13 @@ function Home() {
   const showMoreStories = (category) => {
     setVisibleStories((prevVisible) => ({
       ...prevVisible,
-      [category]: groupStoriesByCategory(stories)[category].length, // Show all stories for that category
+      [category]: groupStoriesByCategory(stories)[category].length,  // Increase by STORY_LIMIT
     }));
+  };
+
+  // Show more user stories
+  const showMoreUserStories = () => {
+    setVisibleUserStories(userStories.length); // Show all user stories
   };
 
   const categories = [
@@ -111,9 +117,8 @@ function Home() {
 
   return (
     <>
-  <Nav  />
-   <div>
-        {/* Category Filter Buttons */}
+      <Nav />
+      <div style={{ padding: "20px" }}>
         <div className={Styles.categories}>
           {categories.map((category) => (
             <div
@@ -130,42 +135,57 @@ function Home() {
           ))}
         </div>
 
-        {/* User Stories */}
-        {isLogin == "true" && (
+        {isLogin === "true" && (
           <div>
             <h2 className={Styles.heading}>Your Stories</h2>
 
             {userStories.length > 0 ? (
-              userStories.map((story) => (
-                <div key={story._id} className={Styles.story}>
-                  <div onClick={() => navigate(`/story/${story._id}`)}>
-                    <h1>{story.slides[0].heading}</h1>
-                    <p>{story.slides[0].description}</p>
-                    {story.slides[0].mediaType === "image" ? (
-                      <img src={story.slides[0].mediaUrl} alt="image" />
-                    ) : story.slides[0].mediaType === "video" ? (
-                      <video src={story.slides[0].mediaUrl} alt="video" />
-                    ) : (
-                      <p>Loading media...</p>
-                    )}
-                  </div>
-                  <button onClick={() =>{ setStoryId(story._id);
-                    setShowUpdate(true)}}>
-                    edit
-                  </button>
+              <>
+                <div className={Styles.storyContainer}>
+                  {userStories.slice(0, visibleUserStories).map((story) => (
+                    <div key={story._id} className={Styles.story}>
+                      <div onClick={() => navigate(`/story/${story._id}`)}>
+                        <div className={Styles.media}>
+                          {story.slides[0].mediaType === "image" ? (
+                            <img src={story.slides[0].mediaUrl} alt="image" />
+                          ) : story.slides[0].mediaType === "video" ? (
+                            <video src={story.slides[0].mediaUrl} alt="video" />
+                          ) : (
+                            <p>Loading media...</p>
+                          )}
+                        </div>
+                        <div className={Styles.content}>
+                          <h1>{story.slides[0].heading}</h1>
+                          <p>{story.slides[0].description}</p>
+                        </div>
+                      </div>
+                      <button
+                        onClick={() => {
+                          setStoryId(story._id);
+                          setShowUpdate(true);
+                        }}
+                        className={Styles.editButton}
+                      >
+                        <FaRegEdit /> Edit
+                      </button>
+                    </div>
+                  ))}
+
+                  {/* Show More button if there are more than visibleUserStories */}
+                  {userStories.length > visibleUserStories && (
+                    <div className={Styles.showMoreContainer}>
+                      <button onClick={showMoreUserStories}>Show More</button>
+                    </div>
+                  )}
                 </div>
-              ))
+              </>
             ) : (
               <p>No stories available</p>
             )}
           </div>
         )}
 
-        <h2 className={Styles.heading}>
-          {selectedCategories.includes("All")
-            ? "Top Stories"
-            : `Top Stories from ${selectedCategories.join(", ")}`}
-        </h2>
+       
 
         {/* Render Stories According to Selected Categories */}
         <div>
@@ -173,66 +193,67 @@ function Home() {
             ? // Show all stories grouped by category
               categories.slice(1).map((category) => (
                 <div key={category}>
-                  <h3>{`Top Stories from ${category}`}</h3>
+                  <h2 style={{textAlign:"center",margin:"40px"}}>{`Top Stories from ${category}`}</h2>
                   {groupedStories[category] &&
                   groupedStories[category].length > 0 ? (
                     <>
-                      {groupedStories[category]
-                        .slice(0, visibleStories[category]) // Show limited number of stories
-                        .map((story) => (
-                          <div key={story._id} className={Styles.story}>
-                            <div
-                              onClick={() => navigate(`/story/${story._id}`)}
-                            >
-                              <h1>{story.slides[0].heading}</h1>
-                              <p>{story.slides[0].description}</p>
-                              {story.slides[0].mediaType === "image" ? (
-                                <img
-                                  src={story.slides[0].mediaUrl}
-                                  alt="image"
-                                />
-                              ) : story.slides[0].mediaType === "video" ? (
-                                <video
-                                  src={story.slides[0].mediaUrl}
-                                  alt="video"
-                                />
-                              ) : (
-                                <p>Loading media...</p>
-                              )}
+                      <div className={Styles.storyContainer}>
+                        {groupedStories[category]
+                          .slice(0, visibleStories[category]) // Show limited number of stories
+                          .map((story) => (
+                            <div key={story._id} className={Styles.story}>
+                              <div
+                                onClick={() => navigate(`/story/${story._id}`)}
+                                className={Styles.media}
+                              >
+                                {story.slides[0].mediaType === "image" ? (
+                                  <img
+                                    src={story.slides[0].mediaUrl}
+                                    alt="image"
+                                  />
+                                ) : story.slides[0].mediaType === "video" ? (
+                                  <video
+                                    src={story.slides[0].mediaUrl}
+                                    alt="video"
+                                  />
+                                ) : (
+                                  <p>Loading media...</p>
+                                )}
+                              </div>
+                              <div className={Styles.content}>
+                                <h1>{story.slides[0].heading}</h1>
+                                <p>{story.slides[0].description}</p>
+                              </div>
                             </div>
-                          </div>
-                        ))}
+                          ))}
 
-                      {/* Show More button if there are more than STORY_LIMIT stories */}
-                      {groupedStories[category].length > STORY_LIMIT &&
-                        visibleStories[category] <
-                          groupedStories[category].length && (
-                          <button onClick={() => showMoreStories(category)}>
-                            Show More
-                          </button>
+                        {/* Show More button if there are more than STORY_LIMIT stories */}
+                        {groupedStories[category].length > visibleStories[category] && (
+                          <div className={Styles.showMoreContainer}>
+                            <button onClick={() => showMoreStories(category)}>
+                              Show More
+                            </button>
+                          </div>
                         )}
+                      </div>
                     </>
                   ) : (
-                    <p>No stories available in this category.</p>
+                    <p style={{textAlign:"center"}}>No stories available in this category.</p>
                   )}
                 </div>
               ))
             : // Show stories for selected categories
               selectedCategories.map((category) => (
                 <div key={category}>
-                  <h3>{`Top Stories from ${category}`}</h3>
+                  <h2 style={{textAlign:"center",margin:"40px"}}>{`Top Stories from ${category}`}</h2>
                   {groupedStories[category] &&
                   groupedStories[category].length > 0 ? (
-                    <div>
+                    <div className={Styles.storyContainer}>
                       {groupedStories[category]
                         .slice(0, visibleStories[category]) // Show limited number of stories
                         .map((story) => (
                           <div key={story._id} className={Styles.story}>
-                            <div
-                              onClick={() => navigate(`/story/${story._id}`)}
-                            >
-                              <h1>{story.slides[0].heading}</h1>
-                              <p>{story.slides[0].description}</p>
+                            <div onClick={() => navigate(`/story/${story._id}`)}>
                               {story.slides[0].mediaType === "image" ? (
                                 <img
                                   src={story.slides[0].mediaUrl}
@@ -247,26 +268,37 @@ function Home() {
                                 <p>Loading media...</p>
                               )}
                             </div>
+                            <div className={Styles.content}>
+                              <h1>{story.slides[0].heading}</h1>
+                              <p>{story.slides[0].description}</p>
+                            </div>
                           </div>
                         ))}
 
                       {/* Show More button if there are more than STORY_LIMIT stories */}
-                      {groupedStories[category].length > STORY_LIMIT &&
-                        visibleStories[category] <
-                          groupedStories[category].length && (
+                      {groupedStories[category].length > visibleStories[category] && (
+                        <div className={Styles.showMoreContainer}>
                           <button onClick={() => showMoreStories(category)}>
                             Show More
                           </button>
-                        )}
+                        </div>
+                      )}
                     </div>
                   ) : (
-                    <p>No stories available in this category.</p>
+                    <p style={{textAlign:"center"}}>No stories available in this category.</p>
                   )}
                 </div>
               ))}
         </div>
+
+        {/* Update Story Modal */}
+        {showUpdate && (
+          <UpdateStoryModal
+            storyId={storyId}
+            setShowUpdate={() => setShowUpdate(false)}
+          />
+        )}
       </div>
-      {showUpdate && <UpdateStoryModal setShowUpdate={setShowUpdate} storyId={storyId} />}
     </>
   );
 }

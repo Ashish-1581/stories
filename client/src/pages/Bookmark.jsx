@@ -19,7 +19,7 @@ function Bookmark() {
         <div>
             <Nav />
             <div className={styles.bookmarkPage}>
-                <h2>Your Bookmarks</h2>
+                <h2 style={{textAlign:"center"}} >Your Bookmarks</h2>
                 <div className={styles.bookmarkContainer}>
                     {bookmarks.length > 0 ? (
                         bookmarks.map((bookmark, index) => (

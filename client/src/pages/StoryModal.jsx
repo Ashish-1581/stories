@@ -12,8 +12,10 @@ import { IoMdDownload } from "react-icons/io";
 import { FaHeart } from "react-icons/fa";
 import LoginModal from "../components/Auth/LoginModal";
 import { createLike, createBookmark } from "../api/slideApi";
+import Spinner from "../components/Spinner/Spinner";
 
 function StoryModal() {
+  const [loading, setLoading] = useState(true);
   const { storyId, index } = useParams(); 
   const [story, setStory] = useState(null);
   const [currentSlide, setCurrentSlide] = useState(parseInt(index) || 0); 
@@ -68,7 +70,7 @@ function StoryModal() {
   };
 
   if (!story || !story.slides) {
-    return <div>Loading...</div>;
+    return  <Spinner loading={loading} />
   }
 
   const current = story.slides[currentSlide];

@@ -47,7 +47,7 @@
 }
 
 .story {
-  width: calc(33.333% - 130px); 
+  width: calc(33.333% - 150px); 
   position: relative;
   height: 400px;
   border: 1px solid #ddd;

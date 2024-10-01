@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "../../Styles/auth.css";
+import "../../Styles/Auth.css";
 import { login } from "../../api/authApi";
 import { toast } from "react-toastify";
 import { IoMdCloseCircleOutline } from "react-icons/io";

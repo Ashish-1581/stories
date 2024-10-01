@@ -3,7 +3,7 @@ import { signup } from "../../api/authApi";
 import { toast } from "react-toastify";
 import { login } from "../../api/authApi";
 import { IoMdCloseCircleOutline } from "react-icons/io";
-import "../../Styles/auth.css";
+import "../../Styles/Auth.css";
 
 
 function RegisterModal({setShowSignUp}) {

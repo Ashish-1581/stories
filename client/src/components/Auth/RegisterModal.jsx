@@ -48,6 +48,7 @@ function RegisterModal({setShowSignUp}) {
           localStorage.setItem("username", response.data.user.username);
           localStorage.setItem("isLogin", true);
           toast.success("Logged In successfully!");
+          window.location.reload();
           setShowSignUp(false);
          
          

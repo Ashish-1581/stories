@@ -33,8 +33,10 @@ function LoginModal({setShowLogin}) {
         localStorage.setItem("username", response.data.user.username);
         localStorage.setItem("isLogin", true);
         toast.success("Logged In successfully!");
-
+       
+        window.location.reload();
         setShowLogin(false);
+       
        
        
       } else {

@@ -34,8 +34,8 @@
     border: 1px solid #ccc;
     padding: 20px;
     position: absolute;
-    top: 50px; /* Adjust based on your layout */
-    right: 10px; /* Adjust based on your layout */
+    top: 50px; 
+    right: 10px; 
     z-index: 100;
   }
   

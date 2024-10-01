@@ -73,23 +73,23 @@
 
 @media (max-width: 1024px) {
     .bookmarkCard {
-        width: calc(50% - 20px); /* 2 cards per row on medium screens */
+        width: calc(50% - 20px);
     }
 }
 
 @media (max-width: 768px) {
     .bookmarkCard {
-        width: calc(100% - 20px); /* 1 card per row on small screens */
+        width: calc(100% - 20px); 
     }
 
     .bookmarkPage h2 {
-        font-size: 1.75rem; /* Slightly smaller heading */
+        font-size: 1.75rem; 
     }
 }
 
 @media (max-width: 480px) {
     .bookmarkPage h2 {
-        font-size: 1.5rem; /* Smaller heading on mobile */
+        font-size: 1.5rem; 
     }
 
     .bookmarkContent h3 {

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Nav from "../components/Home/Nav";
 import { get_Stories, get_UserStories } from "../api/storyApi";
-import Styles from "./Home.module.css";
+import Styles from "../Styles/Home.module.css";
 import { useNavigate } from "react-router-dom";
 import UpdateStoryModal from "../components/Home/UpdateStoryModal";
 import { FaRegEdit } from "react-icons/fa";
@@ -13,7 +13,6 @@ function Home() {
   const isLogin = localStorage.getItem("isLogin");
   const [storyId, setStoryId] = useState(null);
   const [showUpdate, setShowUpdate] = useState(false);
-
   const [userStories, setUserStories] = useState([]);
   const [visibleUserStories, setVisibleUserStories] = useState(4); 
 

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import styles from "./StoryModal.module.css";
+import styles from "../Styles/StoryModal.module.css";
 import { get_Story } from "../api/storyApi";
 import { useParams, useNavigate } from "react-router-dom"; 
 import { IoIosArrowForward } from "react-icons/io";

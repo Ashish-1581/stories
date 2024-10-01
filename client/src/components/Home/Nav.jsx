@@ -2,15 +2,15 @@ import React, { useState } from "react";
 import AddStoryModal from "./AddStoryModal";
 import LoginModal from "../Auth/LoginModal";
 import RegisterModal from "../Auth/RegisterModal";
-import Styles from "./Nav.module.css";
-import { FaBookmark, FaBars } from "react-icons/fa6"; // FaBars for the hamburger menu
+import Styles from "../../Styles/Nav.module.css";
+import { FaBookmark, FaBars } from "react-icons/fa6"; 
 import { useNavigate } from "react-router-dom";
 
 function Nav() {
   const [showLogin, setShowLogin] = useState(false);
   const [showSignUp, setShowSignUp] = useState(false);
   const [showAddStory, setShowAddStory] = useState(false);
-  const [showMenu, setShowMenu] = useState(false); // State for toggling the hamburger menu
+  const [showMenu, setShowMenu] = useState(false); 
 
   const username = localStorage.getItem("username");
   const isLogin = localStorage.getItem("isLogin");

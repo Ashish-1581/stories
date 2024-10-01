@@ -94,7 +94,7 @@
   }
   
   .progressItem.active {
-    background-color: #007bff; /* Highlight current slide */
+    background-color: #007bff;
   }
 
   .foot{

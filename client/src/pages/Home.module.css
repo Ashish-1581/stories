@@ -174,7 +174,7 @@
 /* Small mobile devices (max-width: 576px) */
 @media (max-width: 576px) {
   .story {
-    width: calc(100% - 30px); /* Full-width story with smaller gap for very small screens */
+    width: calc(100% - 30px); 
   }
 
   .category {

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styles from "./StoryModal.module.css";
 import { get_Story } from "../api/storyApi";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom"; 
 import { IoIosArrowForward } from "react-icons/io";
 import { IoIosArrowBack } from "react-icons/io";
 import { RxCross2 } from "react-icons/rx";
@@ -14,26 +14,43 @@ import LoginModal from "../components/Auth/LoginModal";
 import { createLike, createBookmark } from "../api/slideApi";
 
 function StoryModal() {
-  const { storyId } = useParams();
+  const { storyId, index } = useParams(); 
   const [story, setStory] = useState(null);
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const [likes, setLikes] = useState([]); 
-  const [likedSlides, setLikedSlides] = useState([]); 
-  const [bookmarkedSlides, setBookmarkedSlides] = useState([]); // Track bookmarked slides
-  const [showLogin, setShowLogin] = useState(false); 
+  const [currentSlide, setCurrentSlide] = useState(parseInt(index) || 0); 
+  const [likes, setLikes] = useState([]);
+  const [likedSlides, setLikedSlides] = useState([]);
+  const [bookmarkedSlides, setBookmarkedSlides] = useState([]);
+  const [showLogin, setShowLogin] = useState(false);
+  const navigate = useNavigate(); 
+
   const isLogin = localStorage.getItem("isLogin");
 
+  
   useEffect(() => {
     get_Story(storyId).then((response) => {
       if (response.data) {
         setStory(response.data);
-        setLikes(response.data.slides.map((slide) => slide.likes)); 
+        setLikes(response.data.slides.map((slide) => slide.likes));
       }
     });
   }, [storyId]);
 
+ 
+  useEffect(() => {
+    localStorage.setItem(`story_${storyId}_currentSlide`, currentSlide); 
+    navigate(`/story/${storyId}/${currentSlide}`, { replace: true }); 
+  }, [currentSlide, storyId, navigate]);
+
+ 
+  useEffect(() => {
+    const savedSlide = localStorage.getItem(`story_${storyId}_currentSlide`);
+    if (savedSlide !== null) {
+      setCurrentSlide(parseInt(savedSlide));
+    }
+  }, [storyId]);
+
   const handleShare = (storyId) => {
-    const path = `${window.location.origin}/story/${storyId}`;
+    const path = `${window.location.origin}/story/${storyId}/${currentSlide}`;
     navigator.clipboard.writeText(path);
     toast.success("Link Copied to Clipboard");
   };
@@ -74,17 +91,15 @@ function StoryModal() {
         toast.error("Failed to download the media.");
       }
     } else {
-      setShowLogin(true); 
+      setShowLogin(true);
     }
   };
 
   const handleLike = async (storyId, slideId) => {
     if (isLogin) {
       const updatedLikes = [...likes];
-      updatedLikes[currentSlide] += 1; 
-
-      setLikes(updatedLikes); 
-
+      updatedLikes[currentSlide] += 1;
+      setLikes(updatedLikes);
       setLikedSlides([...likedSlides, currentSlide]);
 
       try {
@@ -105,7 +120,7 @@ function StoryModal() {
         toast.error("Failed to like the story");
       }
     } else {
-      setShowLogin(true); 
+      setShowLogin(true);
     }
   };
 
@@ -119,7 +134,7 @@ function StoryModal() {
           toast.error(response.error || "Failed to bookmark the slide");
         } else {
           toast.success("Bookmarked the slide");
-          setBookmarkedSlides([...bookmarkedSlides, currentSlide]); // Add current slide to bookmarked
+          setBookmarkedSlides([...bookmarkedSlides, currentSlide]);
         }
       } catch (error) {
         console.error("Error bookmarking the slide:", error);
@@ -227,25 +242,25 @@ function StoryModal() {
             >
               <IoMdDownload />
             </button>
-           
+
             <button
               className={styles.button}
               onClick={() => handleLike(storyId, current._id)}
             >
-              <div style={{display: "flex", alignItems: "center", gap: "5px"}}>
-                <FaHeart 
+              <div style={{ display: "flex", alignItems: "center", gap: "5px" }}>
+                <FaHeart
                   style={{
                     color: likedSlides.includes(currentSlide) ? "red" : "white",
-                  }} 
-                /> 
-                <span style={{fontSize: "1.8rem"}}> {likes[currentSlide]}</span> 
+                  }}
+                />
+                <span style={{ fontSize: "1.8rem" }}> {likes[currentSlide]}</span>
               </div>
             </button>
           </div>
         </div>
       </div>
 
-      {/* Conditionally render the LoginModal */}
+     
       {showLogin && <LoginModal setShowLogin={setShowLogin} />}
     </>
   );

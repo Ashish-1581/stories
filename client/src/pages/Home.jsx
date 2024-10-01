@@ -15,7 +15,7 @@ function Home() {
   const [showUpdate, setShowUpdate] = useState(false);
 
   const [userStories, setUserStories] = useState([]);
-  const [visibleUserStories, setVisibleUserStories] = useState(4); // Initial limit for user stories
+  const [visibleUserStories, setVisibleUserStories] = useState(4); 
 
   const navigate = useNavigate();
 
@@ -45,10 +45,10 @@ function Home() {
     });
   }, [isLogin]);
 
-  // Limit the initial number of stories shown per category
+
   const STORY_LIMIT = 4;
 
-  // Function to initialize visible stories with default limit
+
   const initializeVisibleStories = (stories) => {
     const grouped = groupStoriesByCategory(stories);
     const visible = {};
@@ -58,7 +58,7 @@ function Home() {
     setVisibleStories(visible);
   };
 
-  // Function to group stories by category
+
   const groupStoriesByCategory = (stories) => {
     const groupedStories = categories.reduce((acc, category) => {
       acc[category.name] = stories.filter(
@@ -73,16 +73,16 @@ function Home() {
   const showMoreStories = (category) => {
     setVisibleStories((prevVisible) => ({
       ...prevVisible,
-      [category]: groupStoriesByCategory(stories)[category].length, // Show all stories for the category
+      [category]: groupStoriesByCategory(stories)[category].length, 
     }));
   };
 
   // Show more user stories
   const showMoreUserStories = () => {
-    setVisibleUserStories(userStories.length); // Show all user stories
+    setVisibleUserStories(userStories.length); 
   };
 
-  // Array of categories with background image URLs
+  
   const categories = [
     {
       name: "All",
@@ -159,7 +159,6 @@ function Home() {
                 backgroundSize: "cover",
                 backgroundPosition: "center",
                 color: "white",
-
                 fontSize: "1.2rem",
               }}
             >
@@ -177,7 +176,7 @@ function Home() {
                 <div className={Styles.storyContainer}>
                   {userStories.slice(0, visibleUserStories).map((story) => (
                     <div key={story._id} className={Styles.story}>
-                      <div onClick={() => navigate(`/story/${story._id}`)}>
+                      <div onClick={() => navigate(`/story/${story._id}/0`)}>
                         <div className={Styles.media}>
                           {story.slides[0].mediaType === "image" ? (
                             <img src={story.slides[0].mediaUrl} alt="image" />
@@ -213,7 +212,7 @@ function Home() {
                 </div>
               </>
             ) : (
-              <p style={{textAlign:"center"}}>No stories available</p>
+              <p style={{ textAlign: "center" }}>No stories available</p>
             )}
           </div>
         )}
@@ -224,22 +223,19 @@ function Home() {
             ? // Show all stories grouped by category
               categories.slice(1).map((category) => (
                 <div key={category.name}>
-                  <h2
-                    style={{ textAlign: "center", margin: "40px" }}
-                  >{`Top Stories from ${category.name}`}</h2>
+                  <h2 style={{ textAlign: "center", margin: "40px" }}>{`Top Stories from ${category.name}`}</h2>
                   {groupedStories[category.name] &&
                   groupedStories[category.name].length > 0 ? (
                     <>
                       <div className={Styles.storyContainer}>
                         {groupedStories[category.name]
-                          .slice(0, visibleStories[category.name]) // Show limited number of stories
+                          .slice(0, visibleStories[category.name])
                           .map((story) => (
                             <div key={story._id} className={Styles.story}>
                               <div
-                                onClick={() => navigate(`/story/${story._id}`)}
+                                onClick={() => navigate(`/story/${story._id}/0`)}
                                 className={Styles.media}
                               >
-                             
                                 {story.slides[0].mediaType === "image" ? (
                                   <img
                                     src={story.slides[0].mediaUrl}
@@ -253,7 +249,6 @@ function Home() {
                                 ) : (
                                   <p>Loading media...</p>
                                 )}
-                                
                               </div>
                               <div className={Styles.content}>
                                 <h1>{story.slides[0].heading}</h1>
@@ -261,28 +256,19 @@ function Home() {
                               </div>
                             </div>
                           ))}
-
-                        {/* Show More button if there are more than STORY_LIMIT stories */}
-                        {groupedStories[category.name].length >
-                          visibleStories[category.name] && (
-                          <div className={Styles.showMoreContainer}>
-                            <button
-                              onClick={() => showMoreStories(category.name)}
-                            >
-                              Show More
-                            </button>
-                          </div>
-                        )}
                       </div>
+                      {groupedStories[category.name].length > visibleStories[category.name] && (
+                        <div className={Styles.showMoreContainer}>
+                          <button onClick={() => showMoreStories(category.name)}>Show More</button>
+                        </div>
+                      )}
                     </>
                   ) : (
-                    <p style={{ textAlign: "center" }}>
-                      No stories available in this category.
-                    </p>
+                    <p style={{ textAlign: "center" }}>No stories available in this category.</p>
                   )}
                 </div>
               ))
-            : // Show stories for selected categories
+            : // If specific categories are selected
               selectedCategories.map((category) => (
                 <div key={category}>
                   <h2
@@ -290,50 +276,45 @@ function Home() {
                   >{`Top Stories from ${category}`}</h2>
                   {groupedStories[category] &&
                   groupedStories[category].length > 0 ? (
-                    <div className={Styles.storyContainer}>
-                      {groupedStories[category]
-                        .slice(0, visibleStories[category]) // Show limited number of stories
-                        .map((story) => (
-                          <div key={story._id} className={Styles.story}>
-                            <div
-                              onClick={() => navigate(`/story/${story._id}`)}
-                              className={Styles.media}
-                            >
-                              {story.slides[0].mediaType === "image" ? (
-                                <img
-                                  src={story.slides[0].mediaUrl}
-                                  alt="image"
-                                />
-                              ) : story.slides[0].mediaType === "video" ? (
-                                <video
-                                  src={story.slides[0].mediaUrl}
-                                  alt="video"
-                                />
-                              ) : (
-                                <p>Loading media...</p>
-                              )}
+                    <>
+                      <div className={Styles.storyContainer}>
+                        {groupedStories[category]
+                          .slice(0, visibleStories[category]) // Show limited number of stories
+                          .map((story) => (
+                            <div key={story._id} className={Styles.story}>
+                              <div
+                                onClick={() => navigate(`/story/${story._id}/0`)}
+                                className={Styles.media}
+                              >
+                                {story.slides[0].mediaType === "image" ? (
+                                  <img
+                                    src={story.slides[0].mediaUrl}
+                                    alt="image"
+                                  />
+                                ) : story.slides[0].mediaType === "video" ? (
+                                  <video
+                                    src={story.slides[0].mediaUrl}
+                                    alt="video"
+                                  />
+                                ) : (
+                                  <p>Loading media...</p>
+                                )}
+                              </div>
+                              <div className={Styles.content}>
+                                <h1>{story.slides[0].heading}</h1>
+                                <p>{story.slides[0].description}</p>
+                              </div>
                             </div>
-                            <div className={Styles.content}>
-                              <h1>{story.slides[0].heading}</h1>
-                              <p>{story.slides[0].description}</p>
-                            </div>
-                          </div>
-                        ))}
-
-                      {/* Show More button if there are more than STORY_LIMIT stories */}
-                      {groupedStories[category].length >
-                        visibleStories[category] && (
+                          ))}
+                      </div>
+                      {groupedStories[category].length > visibleStories[category] && (
                         <div className={Styles.showMoreContainer}>
-                          <button onClick={() => showMoreStories(category)}>
-                            Show More
-                          </button>
+                          <button onClick={() => showMoreStories(category)}>Show More</button>
                         </div>
                       )}
-                    </div>
+                    </>
                   ) : (
-                    <p style={{ textAlign: "center" }}>
-                      No stories available in this category.
-                    </p>
+                    <p style={{ textAlign: "center" }}>No stories available in this category.</p>
                   )}
                 </div>
               ))}

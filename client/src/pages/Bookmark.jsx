@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Nav from '../components/Home/Nav';
 import { getBookmarks } from '../api/slideApi';
-import styles from './Bookmark.module.css'; // Import custom CSS
+import styles from './Bookmark.module.css'; 
 
 function Bookmark() {
     const token = localStorage.getItem("token");

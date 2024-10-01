@@ -75,12 +75,13 @@ const UpdateStoryModal = ({ setShowUpdate ,storyId}) => {
     try {
       const response = await axios.head(slide.mediaUrl);
       const contentType = response.headers["content-type"];
-
+  
+      // Only check if it's a video, otherwise assume it's an image
       if (contentType.startsWith("video/")) {
         slides[index].mediaType = "video";
         const video = document.createElement("video");
         video.src = slide.mediaUrl;
-
+  
         return new Promise((resolve, reject) => {
           video.onloadedmetadata = () => {
             if (video.duration > 15) {
@@ -91,14 +92,16 @@ const UpdateStoryModal = ({ setShowUpdate ,storyId}) => {
           };
           video.onerror = () => reject(new Error("Failed to load video."));
         });
-      } else if (contentType.startsWith("image/")) {
+      } else {
+     
         slides[index].mediaType = "image";
         return Promise.resolve();
-      } else {
-        throw new Error("Unsupported media type. Only images and videos are allowed.");
       }
     } catch (error) {
-      throw new Error("Unsupported media type. Only images and videos are allowed.");
+      console.error("Media validation error:", error.message);
+     
+      slides[index].mediaType = "image";
+      return Promise.resolve();
     }
   };
 

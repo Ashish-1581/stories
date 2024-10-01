@@ -19,8 +19,8 @@
 
 
 .bookmarkCard {
-    width: calc(33.333% - 130px); 
-    height: 400px;
+    width: calc(33.333% - 150px); 
+    height: 430px;
     border: 1px solid #ddd;
     border-radius: 8px;
     overflow: hidden;

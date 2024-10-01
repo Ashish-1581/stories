@@ -35,7 +35,7 @@ function LoginModal({setShowLogin}) {
         toast.success("Logged In successfully!");
 
         setShowLogin(false);
-        window.location.reload();
+       
        
       } else {
         toast.error(response.error || "Login failed");

@@ -49,7 +49,7 @@ function RegisterModal({setShowSignUp}) {
           localStorage.setItem("isLogin", true);
           toast.success("Logged In successfully!");
           setShowSignUp(false);
-          window.location.reload();
+         
          
         } else {
           toast.error(loginResponse.message);

@@ -255,12 +255,13 @@ function Home() {
                               </div>
                             </div>
                           ))}
+                          {groupedStories[category.name].length > visibleStories[category.name] && (
+                            <div className={Styles.showMoreContainer}>
+                              <button onClick={() => showMoreStories(category.name)}>Show More</button>
+                            </div>
+                          )}
                       </div>
-                      {groupedStories[category.name].length > visibleStories[category.name] && (
-                        <div className={Styles.showMoreContainer}>
-                          <button onClick={() => showMoreStories(category.name)}>Show More</button>
-                        </div>
-                      )}
+                      
                     </>
                   ) : (
                     <p style={{ textAlign: "center" }}>No stories available in this category.</p>
@@ -305,12 +306,13 @@ function Home() {
                               </div>
                             </div>
                           ))}
+                          {groupedStories[category].length > visibleStories[category] && (
+                            <div className={Styles.showMoreContainer}>
+                              <button onClick={() => showMoreStories(category)}>Show More</button>
+                            </div>
+                          )}
                       </div>
-                      {groupedStories[category].length > visibleStories[category] && (
-                        <div className={Styles.showMoreContainer}>
-                          <button onClick={() => showMoreStories(category)}>Show More</button>
-                        </div>
-                      )}
+                     
                     </>
                   ) : (
                     <p style={{ textAlign: "center" }}>No stories available in this category.</p>

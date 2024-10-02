@@ -24,6 +24,16 @@ const slideSchema=new mongoose.Schema({
             required:true,
             default:0,
         },
+        likedBy: [{ 
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User',
+            default: [], 
+        }],
+        bookmarkedBy: [{ 
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User',
+            default: [],
+        }]
  
     })
     const storySchema=new mongoose.Schema({

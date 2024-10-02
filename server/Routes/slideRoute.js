@@ -3,9 +3,9 @@ const authMiddleware=require("../middleware/authMiddleware")
 
 const router = require('express').Router();
 
-router.post('/createLike',createLike);
+router.post('/createLike',authMiddleware,createLike);
 router.post('/createBookmark',authMiddleware,createBookmark);
-router.get('/getBookmarks',authMiddleware,getBookmarks);
+router.get('/getBookmarks/',authMiddleware,getBookmarks);
 
 
 

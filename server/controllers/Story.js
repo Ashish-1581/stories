@@ -31,17 +31,20 @@ const updateStory=async(req,res)=>{
     }
 }
 
-const getStoryById=async(req,res)=>{
+const getStoryById = async (req, res) => {
+    const { storyId } = req.params;
 
-    const {storyId}=req.params;
-    try{
-        const story=await Story.findById(storyId);
+    try {
+        const story = await Story.findById(storyId);
+        if (!story) {
+            return res.status(404).json({ message: "Story not found" });
+        }
         res.status(200).json(story);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Internal server error" });
     }
-    catch(err){
-        res.status(500).json(err);
-    }
-}
+};
 
 const getStories=async(req,res)=>{
 const {cat}=req.query;

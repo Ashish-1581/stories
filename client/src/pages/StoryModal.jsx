@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styles from "../Styles/StoryModal.module.css";
 import { get_Story } from "../api/storyApi";
-import { useParams, useNavigate } from "react-router-dom"; 
+import { useParams, useNavigate } from "react-router-dom";
 import { IoIosArrowForward } from "react-icons/io";
 import { IoIosArrowBack } from "react-icons/io";
 import { RxCross2 } from "react-icons/rx";
@@ -16,34 +16,47 @@ import Spinner from "../components/Spinner/Spinner";
 
 function StoryModal() {
   const [loading, setLoading] = useState(true);
-  const { storyId, index } = useParams(); 
+  const { storyId, index } = useParams();
   const [story, setStory] = useState(null);
-  const [currentSlide, setCurrentSlide] = useState(parseInt(index) || 0); 
+  const [currentSlide, setCurrentSlide] = useState(parseInt(index) || 0);
   const [likes, setLikes] = useState([]);
   const [likedSlides, setLikedSlides] = useState([]);
   const [bookmarkedSlides, setBookmarkedSlides] = useState([]);
   const [showLogin, setShowLogin] = useState(false);
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
   const isLogin = localStorage.getItem("isLogin");
+  const userId = localStorage.getItem("userId");
 
-  
   useEffect(() => {
-    get_Story(storyId).then((response) => {
+    const fetchStory = async () => {
+      setLoading(true);
+      const response = await get_Story(storyId);
       if (response.data) {
         setStory(response.data);
         setLikes(response.data.slides.map((slide) => slide.likes));
+        const userLikedSlides = response.data.slides.map((slide) =>
+          slide.likedBy.includes(userId)
+        );
+
+        setLikedSlides(userLikedSlides);
+
+        // Set bookmarked slides for the current user
+        const userBookmarkedSlides = response.data.slides.map((slide) =>
+          slide.bookmarkedBy.includes(userId)
+        );
+        setBookmarkedSlides(userBookmarkedSlides); // Set the bookmarked state
       }
-    });
+      setLoading(false);
+    };
+    fetchStory();
   }, [storyId]);
 
- 
   useEffect(() => {
-    localStorage.setItem(`story_${storyId}_currentSlide`, currentSlide); 
-    navigate(`/story/${storyId}/${currentSlide}`, { replace: true }); 
+    localStorage.setItem(`story_${storyId}_currentSlide`, currentSlide);
+    navigate(`/story/${storyId}/${currentSlide}`, { replace: true });
   }, [currentSlide, storyId, navigate]);
 
- 
   useEffect(() => {
     const savedSlide = localStorage.getItem(`story_${storyId}_currentSlide`);
     if (savedSlide !== null) {
@@ -69,8 +82,8 @@ function StoryModal() {
     }
   };
 
-  if (!story || !story.slides) {
-    return  <Spinner loading={loading} />
+  if (loading || !story || !story.slides) {
+    return <Spinner loading={loading} />;
   }
 
   const current = story.slides[currentSlide];
@@ -97,50 +110,53 @@ function StoryModal() {
     }
   };
 
-  const handleLike = async (storyId, slideId) => {
+  const handleLike = async (storyId, slideId, currentSlide) => {
     if (isLogin) {
-      const updatedLikes = [...likes];
-      updatedLikes[currentSlide] += 1;
-      setLikes(updatedLikes);
-      setLikedSlides([...likedSlides, currentSlide]);
-
       try {
-        const response = await createLike(storyId, slideId);
-        if (response.status !== 200) {
-          updatedLikes[currentSlide] -= 1;
+        const response = await createLike(storyId, slideId, userId);
+        if (response.status === 200) {
+          const updatedLikes = [...likes];
+          const wasLiked = likedSlides[currentSlide];
+
+          // Update likes and liked status
+          updatedLikes[currentSlide] += wasLiked ? -1 : 1; // Increase/decrease the likes
           setLikes(updatedLikes);
-          setLikedSlides(likedSlides.filter((index) => index !== currentSlide));
-          toast.error(response.error || "Failed to like the story");
-        } else {
-          toast.success("Liked the story");
+          setLikedSlides((prev) => {
+            const newLikedSlides = [...prev];
+            newLikedSlides[currentSlide] = !wasLiked; // Toggle liked status
+            return newLikedSlides;
+          });
+
+          toast.success(response.data.message);
         }
       } catch (error) {
-        updatedLikes[currentSlide] -= 1;
-        setLikes(updatedLikes);
-        setLikedSlides(likedSlides.filter((index) => index !== currentSlide));
-        console.error("Error liking the story:", error);
-        toast.error("Failed to like the story");
+        console.error("Error updating like status:", error);
+        toast.error("Failed to update like status");
       }
     } else {
       setShowLogin(true);
     }
   };
 
-  const handleBookmark = async (slide) => {
+  const handleBookmark = async (storyId, slideId, currentSlide) => {
     if (isLogin) {
       try {
-        const token = localStorage.getItem("token");
-        const response = await createBookmark(slide.heading, slide.description, slide.mediaUrl, slide.mediaType, token);
+        const response = await createBookmark(storyId, slideId); // Call API to toggle bookmark
+        if (response.status === 200) {
+          const wasBookmarked = bookmarkedSlides[currentSlide];
 
-        if (response.status !== 200) {
-          toast.error(response.error || "Failed to bookmark the slide");
-        } else {
-          toast.success("Bookmarked the slide");
-          setBookmarkedSlides([...bookmarkedSlides, currentSlide]);
+          // Update bookmarked status
+          setBookmarkedSlides((prev) => {
+            const newBookmarkedSlides = [...prev];
+            newBookmarkedSlides[currentSlide] = !wasBookmarked;
+            return newBookmarkedSlides;
+          });
+
+          toast.success(response.data.message);
         }
       } catch (error) {
-        console.error("Error bookmarking the slide:", error);
-        toast.error("Failed to bookmark the slide");
+        console.error("Error updating bookmark status:", error);
+        toast.error("Failed to update bookmark status");
       }
     } else {
       setShowLogin(true);
@@ -151,7 +167,6 @@ function StoryModal() {
     <>
       <div className={styles.overlay}>
         <div className={styles.modal}>
-          {/* Progress bar */}
           <div className={styles.progressBar}>
             {story.slides.map((slide, index) => (
               <div
@@ -177,7 +192,6 @@ function StoryModal() {
             </button>
           </div>
 
-          {/* Media display based on the URL */}
           <div className={styles.media}>
             {current.mediaType === "image" ? (
               <img
@@ -201,7 +215,6 @@ function StoryModal() {
             <p>{current.description}</p>
           </div>
 
-          {/* Arrow Controls for Previous and Next */}
           <div className={styles.controls}>
             <button
               className={`${styles.arrow} ${
@@ -214,9 +227,7 @@ function StoryModal() {
             </button>
             <button
               className={`${styles.arrow} ${
-                currentSlide === story.slides.length - 1
-                  ? styles.disabled
-                  : ""
+                currentSlide === story.slides.length - 1 ? styles.disabled : ""
               }`}
               onClick={nextSlide}
               disabled={currentSlide === story.slides.length - 1}
@@ -228,13 +239,11 @@ function StoryModal() {
           <div className={styles.foot}>
             <button
               className={styles.button}
-              onClick={() => handleBookmark(current)}
+              onClick={() => handleBookmark(storyId, current._id, currentSlide)}
             >
               <RxBookmarkFilled
                 style={{
-                  color: bookmarkedSlides.includes(currentSlide)
-                    ? "blue"
-                    : "white",
+                  color: bookmarkedSlides[currentSlide] ? "blue" : "white",
                 }}
               />
             </button>
@@ -247,22 +256,26 @@ function StoryModal() {
 
             <button
               className={styles.button}
-              onClick={() => handleLike(storyId, current._id)}
+              onClick={() => handleLike(storyId, current._id, currentSlide)}
             >
-              <div style={{ display: "flex", alignItems: "center", gap: "5px" }}>
+              <div
+                style={{ display: "flex", alignItems: "center", gap: "5px" }}
+              >
                 <FaHeart
                   style={{
-                    color: likedSlides.includes(currentSlide) ? "red" : "white",
+                    color: likedSlides[currentSlide] ? "red" : "white",
                   }}
                 />
-                <span style={{ fontSize: "1.8rem" }}> {likes[currentSlide]}</span>
+                <span style={{ fontSize: "1.8rem" }}>
+                  {" "}
+                  {likes[currentSlide]}
+                </span>
               </div>
             </button>
           </div>
         </div>
       </div>
 
-     
       {showLogin && <LoginModal setShowLogin={setShowLogin} />}
     </>
   );

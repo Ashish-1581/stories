@@ -13,6 +13,7 @@ function Bookmark() {
     useEffect(() => {
         getBookmarks(token).then((response) => {
             if (response.data) {
+                console.log(response.data);
                 setBookmarks(response.data);
             }
         });

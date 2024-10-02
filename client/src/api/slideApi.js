@@ -4,18 +4,24 @@ const baseUrl = import.meta.env.VITE_BACKEND_URL;
 export const createLike = async (storyId, slideId) => {
 
  try {
+    const token=localStorage.getItem("token");
     
   
-        const response = await axios.post(`${baseUrl}/slide/createLike`, { storyId, slideId });
+        const response = await axios.post(`${baseUrl}/slide/createLike`, { storyId, slideId },{
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
         return response;
     } catch (error) {
         return { error: error.response.data.message };
     }
 }
 
-export const createBookmark = async (heading, description, mediaUrl, mediaType,token) => {
+export const createBookmark = async (storyId, slideId) => {
     try {
-        const response = await axios.post(`${baseUrl}/slide/createBookmark`, { heading, description, mediaUrl, mediaType },{
+        const token=localStorage.getItem("token");
+        const response = await axios.post(`${baseUrl}/slide/createBookmark`, { storyId, slideId, },{
             headers: {
                 Authorization: `Bearer ${token}`,
             },
@@ -28,8 +34,9 @@ export const createBookmark = async (heading, description, mediaUrl, mediaType,t
 
 }
 
-export const getBookmarks = async (token) => {
+export const getBookmarks = async () => {
     try {
+        const token=localStorage.getItem("token");
         const response = await axios.get(`${baseUrl}/slide/getBookmarks`, {
             headers: {
                 Authorization: `Bearer ${token}`,
